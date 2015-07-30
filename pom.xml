@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.jeqo.samples</groupId>
+    <artifactId>java-ee-rxjava-kafka-avro</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    
+    <name>Sample: Java EE 7/RxJava/Kafka/Avro</name>
+    <description>Enabling Kafka as Event Source using Avro as Event Serializer/Deserializer and RxJava in a Java EE 7 application</description>
+    
+    <modules>
+        <module>event-source</module>
+        <module>rest-service</module>
+    </modules>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    
+    <dependencyManagement>
+        
+    </dependencyManagement>
+</project>
