@@ -18,17 +18,22 @@
 package com.jeqo.samples.eventsource.infra.kafka;
 
 import java.util.Properties;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Destroyed;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
 import org.apache.kafka.clients.producer.KafkaProducer;
 
 /**
  *
  * @author jeqo
  */
+@ApplicationScoped
 public class KafkaProducerProvider {
 
     KafkaProducer<String, String> producer;
 
-    public void init() {
+    public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -36,7 +41,7 @@ public class KafkaProducerProvider {
         producer = new KafkaProducer<>(props);
     }
 
-    public void destroy() {
+    public void destroy(@Observes @Destroyed(ApplicationScoped.class) Object init) {
         producer.close();
     }
 

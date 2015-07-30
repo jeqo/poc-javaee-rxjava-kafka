@@ -17,8 +17,13 @@
  */
 package com.jeqo.samples.restservice.resources;
 
+import com.jeqo.samples.eventsource.event.ClientAddedEvent;
+import com.jeqo.samples.restservice.infra.ClientAddedEventProducer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -29,8 +34,12 @@ import javax.ws.rs.core.MediaType;
  *
  * @author jeqo
  */
+@Stateless
 @Path("clients")
 public class ClientsResource {
+
+    @Inject
+    ClientAddedEventProducer eventProducer;
 
     static List<String> clients = new ArrayList<>();
 
@@ -43,5 +52,11 @@ public class ClientsResource {
     @POST
     public void addClient(String client) {
         clients.add(client);
+        eventProducer.publish(
+                ClientAddedEvent.newBuilder()
+                .setName(client)
+                .setCreated(new Date().getTime())
+                .build()
+        );
     }
 }

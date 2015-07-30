@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -39,13 +40,13 @@ public class KafkaEventProducer<T extends SpecificRecordBase>
 
     private static final Logger LOGGER = Logger.getLogger(KafkaEventProducer.class.getClass().getName());
 
-    private final KafkaProducerProvider producerProvider;
+    @Inject
+    private KafkaProducerProvider producerProvider;
 
     private final AvroEventSerializer<T> serializer;
 
-    public KafkaEventProducer(KafkaProducerProvider producerProvider) {
+    public KafkaEventProducer() {
         this.serializer = new AvroEventSerializer<>();
-        this.producerProvider = producerProvider;
     }
 
     @Override
@@ -73,15 +74,17 @@ public class KafkaEventProducer<T extends SpecificRecordBase>
     public static void main(String[] args) {
         KafkaProducerProvider producerProvider = new KafkaProducerProvider();
 
-        producerProvider.init();
+        producerProvider.init(null);
 
-        KafkaEventProducer<ClientAddedEvent> eventProducer = new KafkaEventProducer<>(producerProvider);
+        KafkaEventProducer<ClientAddedEvent> eventProducer = new KafkaEventProducer<>();
+
+        eventProducer.producerProvider = producerProvider;
 
         eventProducer.publish(ClientAddedEvent.newBuilder()
                 .setName("jeqo")
                 .setCreated(new Date().getTime())
                 .build());
 
-        producerProvider.destroy();
+        producerProvider.destroy(null);
     }
 }

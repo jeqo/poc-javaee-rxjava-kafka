@@ -36,6 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.jeqo.samples</groupId>
+            <artifactId>java-ee-rxjava-kafka-avro-event-source</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

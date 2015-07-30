@@ -17,11 +17,14 @@
  */
 package com.jeqo.samples.eventsource;
 
+import javax.enterprise.context.ApplicationScoped;
+
 /**
  *
  * @author jeqo
  * @param <T>
  */
+@ApplicationScoped
 public interface EventProducer<T> {
 
     public void publish(T message);

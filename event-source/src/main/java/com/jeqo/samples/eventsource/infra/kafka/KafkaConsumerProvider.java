@@ -24,6 +24,10 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Destroyed;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
 
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
@@ -33,6 +37,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
  *
  * @author jeqo
  */
+@ApplicationScoped
 public class KafkaConsumerProvider {
 
     private static final Logger LOGGER = Logger.getLogger(KafkaConsumerProvider.class.getName());
@@ -40,7 +45,7 @@ public class KafkaConsumerProvider {
     private ConsumerConnector consumer;
     private KafkaConsumerConfig config;
 
-    public void init() {
+    public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         try {
             config = new ObjectMapper(new YAMLFactory())
                     .readValue(
@@ -64,7 +69,7 @@ public class KafkaConsumerProvider {
         }
     }
 
-    public void destroy() {
+    public void destroy(@Observes @Destroyed(ApplicationScoped.class) Object init) {
         consumer.shutdown();
     }
 

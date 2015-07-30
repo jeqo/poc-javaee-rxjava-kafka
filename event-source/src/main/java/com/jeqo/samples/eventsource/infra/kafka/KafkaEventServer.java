@@ -24,6 +24,8 @@ import com.jeqo.samples.eventsource.infra.avro.AvroEventDeserializer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,52 +48,58 @@ public class KafkaEventServer<T extends SpecificRecordBase> implements EventServ
 
     private final KafkaConsumerProvider consumerProvider;
     private final AvroEventDeserializer<T> deserializer;
+    private final ExecutorService executor;
     private final Class<T> type;
 
     public KafkaEventServer(
             Class<T> type,
-            KafkaConsumerProvider consumerProvider
+            KafkaConsumerProvider consumerProvider,
+            ExecutorService executor
     ) {
         this.consumerProvider = consumerProvider;
         this.type = type;
         this.deserializer = new AvroEventDeserializer<>(type);
+        this.executor = executor;
     }
 
     @Override
     public Observable<T> consume() {
         return Observable.create(subscriber -> {
-            try {
-                LOGGER.log(Level.INFO, "Preparing Server for Event {0}", type.getName());
-                Map<String, Integer> topicCountMap = new HashMap<>();
-                topicCountMap.put(type.getSimpleName(), 1);
+            Runnable r = () -> {
+                try {
+                    LOGGER.log(Level.INFO, "Preparing Server for Event {0}", type.getName());
+                    Map<String, Integer> topicCountMap = new HashMap<>();
+                    topicCountMap.put(type.getSimpleName(), 1);
 
-                Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap
-                        = consumerProvider.consumer()
-                        .createMessageStreams(topicCountMap);
+                    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap
+                            = consumerProvider.consumer()
+                            .createMessageStreams(topicCountMap);
 
-                List<KafkaStream<byte[], byte[]>> streams = consumerMap
-                        .get(type.getSimpleName());
+                    List<KafkaStream<byte[], byte[]>> streams = consumerMap
+                            .get(type.getSimpleName());
 
-                KafkaStream<byte[], byte[]> stream = streams.get(0);
+                    KafkaStream<byte[], byte[]> stream = streams.get(0);
 
-                ConsumerIterator<byte[], byte[]> it = stream.iterator();
+                    ConsumerIterator<byte[], byte[]> it = stream.iterator();
 
-                while (it.hasNext()) {
-                    subscriber.onNext(
-                            deserializer.deserialize(it.next().message())
-                    );
+                    while (it.hasNext()) {
+                        subscriber.onNext(
+                                deserializer.deserialize(it.next().message())
+                        );
+                    }
+                } catch (Exception ex) {
+                    subscriber.onError(ex);
                 }
-            } catch (Exception ex) {
-                subscriber.onError(ex);
-            }
+            };
+            executor.execute(r);
         });
     }
 
     public static void main(String[] args) {
         KafkaConsumerProvider consumerProvider = new KafkaConsumerProvider();
-        consumerProvider.init();
+        consumerProvider.init(null);
         KafkaEventServer<ClientAddedEvent> eventServer = new KafkaEventServer<>(
-                ClientAddedEvent.class, consumerProvider
+                ClientAddedEvent.class, consumerProvider, Executors.newCachedThreadPool()
         );
         eventServer.consume().subscribe(new Subscriber<ClientAddedEvent>() {
 
@@ -110,6 +118,7 @@ public class KafkaEventServer<T extends SpecificRecordBase> implements EventServ
                 LOGGER.log(Level.INFO, "Event received {0}", t.toString());
             }
         });
+        consumerProvider.destroy(null);
     }
 
 }
