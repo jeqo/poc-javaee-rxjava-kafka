@@ -1,0 +1,9 @@
+{
+    "namespace": "com.jeqo.samples.eventsource.event",
+    "type": "record",
+    "name": "ClientAddedEvent",
+    "fields": [
+        {"name": "name", "type": "string"},
+        {"name": "created", "type": "long"}
+    ]
+}

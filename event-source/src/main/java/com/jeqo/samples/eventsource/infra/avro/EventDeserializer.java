@@ -15,31 +15,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.jeqo.samples.restservice.resources;
+package com.jeqo.samples.eventsource.infra.avro;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.specific.SpecificDatumReader;
+import org.apache.avro.specific.SpecificRecordBase;
 
 /**
  *
  * @author jeqo
+ * @param <T>
  */
-@Path("events")
-public class EventsResource {
+public class EventDeserializer<T extends SpecificRecordBase> {
 
-    static List<String> events = new ArrayList<>();
+    private final Class<T> type;
 
-    public EventsResource() {
-        events.add("Event 0: App started");
+    public EventDeserializer(Class<T> type) {
+        this.type = type;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getEvents() {
-        return events;
+    public T deserialize(byte[] recordSerialized) {
+        try {
+            return new SpecificDatumReader<>(type).read(
+                    null,
+                    DecoderFactory.get()
+                    .binaryDecoder(recordSerialized, null)
+            );
+        } catch (IOException ex) {
+            throw new RuntimeException("Error deserializing event", ex);
+        }
     }
 }

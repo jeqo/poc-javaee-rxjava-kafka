@@ -12,3 +12,4 @@
 hs_err_pid*
 /event-source/target/
 /rest-service/target/
+/event-source/nbproject/
