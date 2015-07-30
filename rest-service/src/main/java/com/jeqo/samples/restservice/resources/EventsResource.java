@@ -17,7 +17,6 @@
  */
 package com.jeqo.samples.restservice.resources;
 
-import com.jeqo.samples.eventsource.event.ClientAddedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;

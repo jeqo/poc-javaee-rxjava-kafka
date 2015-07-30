@@ -27,6 +27,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <name>Sample: Java EE 7/RxJava/Kafka/Avro</name>
     <description>Enabling Kafka as Event Source using Avro as Event Serializer/Deserializer and RxJava in a Java EE 7 application</description>
     
+    <contributors>
+        <contributor>
+            <name>Jorge Quilcate</name>
+            <email>quilcate.jorge@gmail.com</email>
+            <url>http://jeqo.github.io</url>
+        </contributor>
+    </contributors>
+    
     <modules>
         <module>event-source</module>
         <module>rest-service</module>

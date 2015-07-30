@@ -65,6 +65,7 @@ public class KafkaEventServer<T extends SpecificRecordBase> implements EventServ
     @Override
     public Observable<T> consume() {
         return Observable.create(subscriber -> {
+            // Creates a new thread to wait for Events
             Runnable r = () -> {
                 try {
                     LOGGER.log(Level.INFO, "Preparing Server for Event {0}", type.getName());

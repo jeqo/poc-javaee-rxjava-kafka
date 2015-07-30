@@ -76,7 +76,10 @@ public class ClientAddedEventSubscriber extends Subscriber<ClientAddedEvent> {
 
     @Override
     public void onNext(ClientAddedEvent t) {
-        EventsResource.events.add("Client Added: " + t.getName() + " at " + new Date(t.getCreated()));
+        LOGGER.log(Level.INFO, "Event received {0}", t);
+        EventsResource.events.add(
+                "Client Added: " + t.getName() + " at " + new Date(t.getCreated())
+        );
     }
 
 }

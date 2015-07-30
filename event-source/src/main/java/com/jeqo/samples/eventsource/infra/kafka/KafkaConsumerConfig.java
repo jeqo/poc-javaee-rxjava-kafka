@@ -18,7 +18,7 @@
 package com.jeqo.samples.eventsource.infra.kafka;
 
 /**
- *
+ * YAML POJO for Kafka Consumer properties
  * @author jeqo
  */
 public class KafkaConsumerConfig {
