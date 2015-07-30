@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <kafka.version>0.8.2.1</kafka.version>
         <rxjava.version>1.0.12</rxjava.version>
         <avro.version>1.7.7</avro.version>
+        <netbeans.hint.license>gpl20</netbeans.hint.license>
     </properties>
     
     <dependencyManagement>     
