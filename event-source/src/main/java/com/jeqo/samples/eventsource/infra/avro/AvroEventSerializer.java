@@ -29,7 +29,7 @@ import org.apache.avro.specific.SpecificRecordBase;
  * @author jeqo
  * @param <T>
  */
-public class EventSerializer<T extends SpecificRecordBase> {
+public class AvroEventSerializer<T extends SpecificRecordBase> {
 
     public byte[] serialize(T record) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {

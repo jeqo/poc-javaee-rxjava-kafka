@@ -18,6 +18,8 @@
 package com.jeqo.samples.eventsource.infra.avro;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificRecordBase;
@@ -27,11 +29,11 @@ import org.apache.avro.specific.SpecificRecordBase;
  * @author jeqo
  * @param <T>
  */
-public class EventDeserializer<T extends SpecificRecordBase> {
+public class AvroEventDeserializer<T extends SpecificRecordBase> {
 
     private final Class<T> type;
 
-    public EventDeserializer(Class<T> type) {
+    public AvroEventDeserializer(Class<T> type) {
         this.type = type;
     }
 
